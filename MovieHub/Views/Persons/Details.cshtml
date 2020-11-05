@@ -1,0 +1,67 @@
+@using MovieHub.Data
+@using Microsoft.EntityFrameworkCore
+@model Person
+@inject ApplicationDbContext Context
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+@functions {
+
+    private async Task<string> GetMovie(int movieId)
+    {
+        var movie = await Context.Movies.FirstOrDefaultAsync(c => c.Id == movieId);
+        return movie.Title;
+    }
+
+}
+
+<div class="row justify-content-center">
+<div class="col-8">
+    <div class="row">
+        <h2 class="col col-8">@Html.DisplayFor(model => model.Name)</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <h2 class="col col-2">
+                <a class="btn btn-outline-dark btn-block" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            </h2>
+            <h2 class="col col-2">
+                <a class="btn btn-outline-danger btn-block" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            </h2>
+        }
+    </div>
+    @if (Model.Img != null)
+    {
+        <img id="mainImage" src="@Url.Content("~/images/posts/" + Model.Img)" class="img-fluid" alt="Heading image" />
+    }
+    <div class="row">
+        <div class="col">
+            <h4>Created in @Html.DisplayFor(model => model.BirthDate)</h4>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col">
+            @Html.Raw(Model.Biog)
+        </div>
+    </div>
+</div>
+</div>
+<div class="row justify-content-center">
+    <div class="col">
+        @if (Model.MoviePersons != null)
+        {
+            foreach (var mc in Context.MoviePersons)
+            {
+                if (mc.PersonId == Model.Id)
+                {
+                    <a asp-controller="Persons" asp-action="Details" asp-route-id="@mc.MovieId" class="stretched-link">
+                        @await GetMovie(mc.MovieId)
+                    </a>
+                    <br>
+                }
+                        
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,34 @@
+@model Review
+
+<div class="row justify-content-center">
+    <div class="col col-8">
+        <h4>Reviews</h4>
+        <hr />
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form action="@Model.MovieId/Review" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MovieId" />
+            <div class="form-group">
+                <label for="Title" class="control-label">Title</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a class="control-label">Text</a>
+                <textarea asp-for="Text" id="markdown" class="form-control markdown-autosize"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Mark" class="control-label">Mark</label>
+                <input asp-for="Mark" class="form-control" />
+                <span asp-validation-for="Mark" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Post" class="btn btn-outline-dark" />
+            </div>
+        </form>
+    </div>
+</div>

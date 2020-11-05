@@ -1,0 +1,46 @@
+@model Movie
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-6">
+        <br />
+        <h2>Add New Movie</h2>
+        <hr />
+        <form asp-action="CreateMovie" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Poster" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="Title" class="control-label">Title</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Poster" class="control-label">Image</label>
+                <input type="file" name="Poster" class="form-control-file" />
+            </div>
+            <div class="form-group">
+                <label class="control-labe">Date of Creation</label>
+                <input type="date" asp-format="{0:yyyy-MM-dd}" asp-for="CreateDate" class="form-control" />
+                <span asp-validation-for="CreateDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a class="control-label">Description</a>
+                <textarea asp-for="Desc" id="markdown" class="form-control markdown-autosize"></textarea>
+                <span asp-validation-for="Desc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-outline-primary" />
+            </div>
+        </form>
+
+        
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</div>

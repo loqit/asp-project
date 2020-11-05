@@ -1,0 +1,29 @@
+@using Microsoft.AspNetCore.Identity
+@using MovieHub.Areas.Identity
+@model Post
+@inject UserManager<MHUser> UserManager
+@{
+    ViewBag.Title = "Edit";
+    Layout = "_Layout";
+    await UserManager.GetUserAsync(User);
+}
+
+<form asp-action="Edit" method="post">
+    <div class="item">
+        @Html.TextBox(@Model.Title)
+    </div>
+    <div class="form-group">
+        <a href="https://en.wikipedia.org/wiki/Markdown" class="control-label">Markdown</a>
+        <textarea asp-for="Text" id="markdown" class="form-control markdown-autosize"></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+        <button type="button"  onclick="MarkdownToHtml()" class="btn btn-outline-dark">Preview</button>
+    </div>
+        <div class="form-group">
+            <label for="Image" class="control-label">Image</label>
+            <input type="file" name="Image" class="form-control-file" />
+        </div>
+    <div class="form-group">
+        
+        <input type="submit" value="Save" class="btn btn-outline-primary" />
+    </div>
+</form>

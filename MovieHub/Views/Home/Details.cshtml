@@ -1,0 +1,80 @@
+@using Microsoft.AspNetCore.Identity
+@using MovieHub.Areas.Identity
+@using MovieHub.Data
+
+@model Post
+
+@inject UserManager<MHUser> UserManager
+@inject ApplicationDbContext Context
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "_Layout";
+    await UserManager.GetUserAsync(User);
+}
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="row">
+            <h2 class="col col-8">@Html.DisplayFor(model => model.Title)</h2>
+
+            @if (Model.Author == await UserManager.GetUserAsync(principal: User) && Model.Author != null || User.IsInRole("Admin"))
+            {
+                <h2 class="col col-2">
+                    <a class="btn btn-outline-dark btn-block" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                </h2>
+
+                <h2 class="col col-2">
+                    <a class="btn btn-outline-danger btn-block" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                </h2>
+            }
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <small>Was written on @Html.DisplayFor(model => model.DOC)</small>
+   
+            </div>
+        </div>
+        <hr />
+        @if (Model.Img != null)
+        {
+            <img id="mainImage" src="@Url.Content("~/images/posts/" + Model.Img)" class="img-fluid" alt="Heading image" />
+        }
+        <div class="row">
+            <div class="col">
+                @Html.Raw(Model.FormatedText)
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="container">
+        @await Html.PartialAsync("CreateComment", new Comment()
+        {
+            PostId = Model.Id
+        })
+    </div>
+</div>
+@if (Context.Comments != null)
+{
+@foreach (var com in Context.Comments)
+{
+    if (com.PostId == Model.Id)
+    {
+        <div class="row justify-content-center">
+            <div class="col col-8">
+
+                <strong>@com.Author</strong> <br>
+
+                @com.Text <br>
+                <small>@com.DOC</small>
+                <hr>
+                <br>
+            </div>
+        </div>
+    }
+}
+}

@@ -1,0 +1,159 @@
+@using MovieHub.Data
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Mvc.Formatters.Xml
+@using MovieHub.Areas.Identity
+@using Microsoft.AspNetCore.Identity
+@model Movie
+@inject UserManager<MHUser> UserManager
+
+@functions {
+
+    private async Task<string> GetCategory(int categoryId)
+    {
+        var category = await Context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+        return category.Name;
+    }
+    private async Task<string> GetPerson(int personId)
+    {
+        var person = await Context.Persons.FirstOrDefaultAsync(c => c.Id == personId);
+        return person.Name;
+    }
+}
+
+@inject ApplicationDbContext Context
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+    await UserManager.GetUserAsync(User);
+}
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="row">
+            <h2 class="col col-8">@Html.DisplayFor(model => model.Title)</h2>
+            @if (User.IsInRole("Admin"))
+            {
+                <h2 class="col col-2">
+                    <a class="btn btn-outline-dark btn-block" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                </h2>
+                <h2 class="col col-2">
+                    <a class="btn btn-outline-danger btn-block" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                </h2>
+            }
+        </div>
+        @if (Model.Poster != null)
+        {
+            <img id="mainImage" src="@Url.Content("~/images/posts/" + Model.Poster)" class="img-fluid" alt="Heading image" />
+        }
+        <div class="row">
+            <div class="col">
+                <h4>Created in @Html.DisplayFor(model => model.CreateDate)</h4>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col">
+                @Html.Raw(Model.Desc)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                @if (Model.MovieCategories != null)
+                {
+                    foreach (var mc in Context.MovieCategories)
+                    {
+                        if (mc.MovieId == Model.Id)
+                        {
+                            <a asp-controller="Categories" asp-action="Details" asp-route-id="@mc.CategoryId" class="stretched-link">
+                                @await GetCategory(mc.CategoryId)
+                            </a>
+                            <br>
+                        }
+                        
+                    }
+                }
+            </div>
+            <div class="col">
+                @if (Model.MoviePersons != null)
+                {
+                    foreach (var mp in Context.MoviePersons)
+                    {
+                        if (mp.MovieId == Model.Id)
+                        {
+                            <a asp-controller="Persons" asp-action="Details" asp-route-id="@mp.PersonId" class="stretched-link">
+                                @await GetPerson(mp.PersonId)
+                            </a>
+                            <br>
+                        }
+                        
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="row">
+        <div class="col">
+            <form asp-action="AddCategory">
+                <select name="categoryId" class="btn btn-outline-primary">
+                    @foreach (var category in Context.Categories)
+                    {
+                        <option value="@category.Id,@Model.Id" >@category.Name</option>
+                    }
+                </select>
+                <br>
+                
+                <div class="form-group">
+                    <input type="submit" value="Add category" class="btn btn-outline-primary"/>
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <form asp-action="AddPerson">
+                <select name="personId" class="btn btn-outline-primary">
+                    @foreach (var person in Context.Persons)
+                    {
+                        <option value="@person.Id,@Model.Id" >@person.Name</option>
+                    }
+                </select>
+                <br>
+                <div class="form-group">
+                    <input type="submit" value="Add person" class="btn btn-outline-primary"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="container">
+        @await Html.PartialAsync("_AddReview", new Review()
+        {
+            MovieId = Model.Id
+        })
+    </div>
+</div>
+@if (Context.Reviews != null)
+{
+@foreach (var rev in Context.Reviews)
+{
+    if (rev.MovieId == Model.Id)
+    {
+        <div class="row justify-content-center">
+            <div class="col col-8">
+
+                <strong>@rev.Title</strong> <br>
+
+                @Html.Raw(rev.FormatedText) 
+                <p><strong>@rev.Mark/10</strong></p><br>
+                <small>@rev.Author</small>
+                <small>@rev.DoC</small>
+                <hr>
+                <br>
+            </div>
+        </div>
+    }
+}
+}

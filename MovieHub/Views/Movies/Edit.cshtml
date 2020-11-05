@@ -1,0 +1,29 @@
+@model Movie
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+<form asp-action="Edit" method="post">
+    <div class="item">
+        @Html.TextBox(@Model.Title)
+    </div>
+    <div class="form-group">
+        <a href="https://en.wikipedia.org/wiki/Markdown" class="control-label">Description</a>
+        <textarea asp-for="Desc" id="markdown" class="form-control markdown-autosize"></textarea>
+        <span asp-validation-for="Desc" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Image" class="control-label">Poster</label>
+        <input type="file" name="Image" class="form-control-file" />
+    </div>
+    <div class="form-group">
+        <label class="control-labe">Date of Creation</label>
+        <input type="date" asp-for="CreateDate" class="form-control" />
+        <span asp-validation-for="CreateDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        
+        <input type="submit" value="Save" class="btn btn-outline-primary" />
+    </div>
+</form>

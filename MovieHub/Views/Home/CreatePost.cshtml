@@ -1,0 +1,61 @@
+@model Post
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h1>Write a post</h1>
+<div class="row justify-content-center">
+    <div class="col-6">
+        <br />
+        <h2>Create New Post</h2>
+        <hr />
+        <form asp-action="CreatePost" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Img" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="Title" class="control-label">Title</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Img" class="control-label">Image</label>
+                <input type="file" name="Img" class="form-control-file" />
+            </div>
+
+            <div class="form-group">
+                <a href="https://en.wikipedia.org/wiki/Markdown" class="control-label">Text</a>
+                <textarea asp-for="Text" id="markdown" class="form-control markdown-autosize"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="MarkdownToHtml()" class="btn btn-outline-dark">Preview</button>
+
+                <input type="submit" value="Create" class="btn btn-outline-primary" />
+            </div>
+        </form>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="htmlModal" tabindex="-1" role="dialog" aria-labelledby="htmlModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="htmlModalLongTitle">Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

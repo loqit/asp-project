@@ -1,0 +1,57 @@
+﻿@page
+@model LoginModel
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Log in"];
+    Layout = "/Views/Shared/_layout.cshtml";
+}
+
+<div class="row justify-content-md-center">
+    <h2 class="col-6">@ViewData["Title"]</h2>
+</div>
+<div class="row justify-content-md-center">
+    <div class="col col-6">
+        <section>
+            <form method="post">
+                <h4>@Localizer["Use a local account to log in"].</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label asp-for="Input.RememberMe">
+                            <input asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">@Localizer["Log in"]</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a asp-page="./ForgotPassword">@Localizer["Forgot your password"]?</a>
+                    </p>
+                    <p>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">@Localizer["Register as a new user"]</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

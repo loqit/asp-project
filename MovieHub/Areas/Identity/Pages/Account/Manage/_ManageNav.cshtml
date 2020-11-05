@@ -1,0 +1,35 @@
+﻿
+@using MovieHub.Areas.Identity
+@using MovieHub.Areas.Identity.Pages.Account.Manage
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<MHUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<aside class="col-12 p-0 bg-light">
+    <nav class="navbar navbar-expand flex-md-column flex-row align-items-start py-2">
+    <div class="collapse navbar-collapse">
+            <ul class="flex-md-column flex-row navbar-nav w-100 justify-content-between">
+
+                <li class="nav-item" class="@ManageNavPages.IndexNavClass(ViewContext)">
+                    <a class="nav-link" asp-page="./Index">Profile</a>
+                </li>
+                <li class="nav-item" class="@ManageNavPages.ChangePasswordNavClass(ViewContext)">
+                    <a class="nav-link" id="change-password" asp-page="./ChangePassword">Password</a>
+                </li>
+                @if (hasExternalLogins)
+                {
+                    <li class="nav-item" class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)">
+                        <a class="nav-link" id="external-login" asp-page="./ExternalLogins">External logins</a>
+                    </li>
+                }
+                <li class="nav-item" class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)">
+                    <a class="nav-link" asp-page="./TwoFactorAuthentication">Two-factor authentication</a>
+                </li>
+                <li class="nav-item" class="@ManageNavPages.PersonalDataNavClass(ViewContext)">
+                    <a class="nav-link" asp-page="./PersonalData">Personal data</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</aside>

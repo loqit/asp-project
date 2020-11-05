@@ -1,0 +1,37 @@
+@model IEnumerable<MovieHub.Models.Movie>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h1 class="col-2 align-self-end ">
+    <a class="btn btn-info" asp-action="CreateMovie">Create New</a>
+</h1>
+<div class="row">
+    @foreach (var m in Model)
+    {
+        <div class="col-md-4">
+            <div class="card card-hover">
+                @if (m.Poster != null)
+                {
+                    <img src="@Url.Content("~/images/movies/" + m.Poster)" class="card-img-top" alt="Placeholder" />
+                }
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @m.Title
+                    </h5>
+                    <a asp-action="Details" asp-route-id="@m.Id" class="stretched-link"></a>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            @m.CreateDate
+                        </small>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+    }
+    <br>
+</div>
