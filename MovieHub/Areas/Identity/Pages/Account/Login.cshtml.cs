@@ -66,7 +66,7 @@ namespace MovieHub.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
 
             if (ModelState.IsValid)
             {
@@ -86,6 +86,13 @@ namespace MovieHub.Areas.Identity.Pages.Account
                 {
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
+                }
+
+                if (result.IsNotAllowed)
+                {
+                    ModelState.AddModelError(string.Empty, "Please verify your email.");
+                    _logger.LogWarning("Not verified email");
+                    return Page();
                 }
                 else
                 {

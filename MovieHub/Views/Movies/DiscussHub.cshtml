@@ -1,0 +1,78 @@
+@model Movie
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = @Localizer["Discuss"];
+    Layout = "_Layout";
+}
+<div class="row justify-content-center">
+    <div class="col col-8">
+        <h2>Discuss Movie @Model.Title</h2>
+        <hr />
+    </div>
+    <div class="col col-8">
+        <textarea class="col" id="messageInput"></textarea>
+    </div>
+    <div class="col col-8">
+        <button id="sendButton" class="btn btn-outline-dark">@Localizer["Send"]</button>
+        <hr />
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <ul id="messagesList"></ul>
+    </div>
+</div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js" integrity="sha512-hqwtOj6waHZZoLRoJoLn0tq34JS97tR1QmhM69uvyrt3LVBiR1o0xeOVAskjUFL1L1fahQH2W7IdcMaFbqCEaw==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.js" integrity="sha512-4wO0nsfZ4DDSGTE/KBYwvKSj2KyC3yKdIysu0IQozCjvootOwcIQc5IBr6/ZhTILfyls9tZGHFilaCAxun1J/g==" crossorigin="anonymous"></script>
+<script>
+
+var connection = new signalR.HubConnectionBuilder()
+    .withUrl("/DiscussHub")
+    .build();
+
+document.getElementById("sendButton").disabled = true;
+
+connection.on("Send", function (message, user) {
+    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var encodedMsg = user + " says " + msg;
+    var li = document.createElement("li");
+    li.textContent = encodedMsg;
+    document.getElementById("messagesList").appendChild(li);
+});
+connection.start().then(function () {
+    var group = '@Model.Title'
+    document.getElementById("sendButton").disabled = false;
+    connection.invoke('JoinGroup', group);
+    var b = document.getElementById("sendButton");
+
+
+}).catch(function (err) {
+    return console.error(err.toString());
+});
+
+connection.on('Notify', function(message) {
+        var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        var li = document.createElement("li");
+        li.textContent = msg;
+        document.getElementById("messagesList").appendChild(li);
+});
+document.getElementById("sendButton").addEventListener("click", function (event) {
+    var group = '@Model.Title'
+    var message = document.getElementById("messageInput").value;
+    connection.invoke("Send", message, group).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+
+
+</script>

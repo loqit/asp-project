@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Mvc.Formatters.Xml
 @using MovieHub.Areas.Identity
 @using Microsoft.AspNetCore.Identity
+@using Org.BouncyCastle.Bcpg.Attr
 @model Movie
 @inject UserManager<MHUser> UserManager
 
@@ -43,11 +44,13 @@
         </div>
         @if (Model.Poster != null)
         {
-            <img id="mainImage" src="@Url.Content("~/images/posts/" + Model.Poster)" class="img-fluid" alt="Heading image" />
+           // <img id="mainImage" src="@Url.Content("~/images/posts/" + Model.Poster)" class="img-fluid" alt="Heading image" />
+            <img src="@Url.Content("~/images/movies/" + Model.Poster)" class="card-img-top" alt="Placeholder" />
         }
         <div class="row">
             <div class="col">
-                <h4>Created in @Html.DisplayFor(model => model.CreateDate)</h4>
+                <h4>Created in @Convert.ToDateTime(Model.CreateDate).ToString("dd/MM/yyyy")</h4>
+
             </div>
         </div>
         <hr />
@@ -96,19 +99,21 @@
 <div class="row justify-content-center">
     <div class="row">
         <div class="col">
-            <form asp-action="AddCategory">
-                <select name="categoryId" class="btn btn-outline-primary">
-                    @foreach (var category in Context.Categories)
-                    {
-                        <option value="@category.Id,@Model.Id" >@category.Name</option>
-                    }
-                </select>
-                <br>
-                
-                <div class="form-group">
-                    <input type="submit" value="Add category" class="btn btn-outline-primary"/>
-                </div>
-            </form>
+
+                <form asp-action="AddCategory">
+                    <select name="categoryId" class="btn btn-outline-primary">
+                        @foreach (var category in Context.Categories)
+                        {
+                            <option value="@category.Id,@Model.Id">@category.Name</option>
+                        }
+                    </select>
+                    <br>
+                    <div class="form-group">
+                        <input type="submit" value="Add category" class="btn btn-outline-primary"/>
+                    </div>
+
+                </form>
+            
         </div>
         <div class="col">
             <form asp-action="AddPerson">
@@ -157,3 +162,8 @@
     }
 }
 }
+<div class="row justify-content-center">
+    <div class="col col-8">
+        <a class="btn btn-outline-primary" asp-controller="Movies" asp-action="DiscussHub" asp-route-id="@Model.Id">Join live discussion</a>
+    </div>
+</div>

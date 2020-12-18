@@ -28,7 +28,7 @@ namespace MovieHub.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(nullable: false),
-                    CreateDate = table.Column<int>(nullable: false),
+                    CreateDate = table.Column<DateTime>(nullable: false),
                     Desc = table.Column<string>(nullable: true),
                     Poster = table.Column<string>(nullable: true),
                     Rating = table.Column<float>(nullable: false),
