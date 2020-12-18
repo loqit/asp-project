@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using MailKit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -17,13 +16,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MovieHub.Areas.Identity;
-using MovieHub.Hubs;
-using MovieHub.Models;
-using MovieHub.Services;
-using MovieHub.Services.Abstractions;
-using NETCore.MailKit.Core;
-using MailService = MovieHub.Services.MailService;
-
 
 namespace MovieHub
 {
@@ -42,13 +34,13 @@ namespace MovieHub
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
-
-            
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
-            services.AddTransient<IEmailSender, MailService>();
-            services.AddSignalR();
+           // services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+           //     .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            //services.AddIdentity<MHUser, IdentityRole>();
+          //  services.AddDefaultIdentity<MHUser>()
+            //      .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddLocalization(options => options.ResourcesPath = Settings.ResourcesPath);
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -64,7 +56,6 @@ namespace MovieHub
             services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,61 +87,15 @@ namespace MovieHub
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                endpoints.MapHub<DiscussHub>("/DiscussHub");
             });
-            
-            
             ApplicationDbInitializer.SeedUsers(userManager, roleManager).Wait();
         }
-        private async Task CreateRoles(IServiceProvider serviceProvider)
-        {
-            //initializing custom roles 
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<MHUser>>();
-            string[] roleNames = { "Admin", "Store-Manager", "Member" };
-            IdentityResult roleResult;
-
-            foreach (var roleName in roleNames)
-            {
-                var roleExist = await RoleManager.RoleExistsAsync(roleName);
-                // ensure that the role does not exist
-                if (!roleExist)
-                {
-                    //create the roles and seed them to the database: 
-                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-                }
-            }
-
-            // find the user with the admin email 
-            var _user = await UserManager.FindByEmailAsync("admin@email.com");
-
-            // check if the user exists
-            if(_user == null)
-            {
-                //Here you could create the super admin who will maintain the web app
-                var poweruser = new MHUser()
-                {
-                    UserName = "Admin",
-                    Email = "admin@email.com",
-                };
-                string adminPassword = "p@$$w0rd";
-
-                var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
-                if (createPowerUser.Succeeded)
-                {
-                    //here we tie the new user to the role
-                    await UserManager.AddToRoleAsync(poweruser, "Admin");
-
-                }
-            }
-        }
-        
     }
 }

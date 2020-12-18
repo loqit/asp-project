@@ -29,12 +29,6 @@
                 <li class="nav-item" class="@ManageNavPages.PersonalDataNavClass(ViewContext)">
                     <a class="nav-link" asp-page="./PersonalData">Personal data</a>
                 </li>
-                @if (User.IsInRole("Admin"))
-                {
-                    <li class="nav-item" class="@ManageNavPages.AddModeratorNavClass(ViewContext)">
-                        <a class="nav-link" asp-page="./AddModerator">Add Moderator</a>
-                    </li>
-                }
             </ul>
         </div>
     </nav>

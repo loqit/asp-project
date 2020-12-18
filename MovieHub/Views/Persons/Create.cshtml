@@ -24,21 +24,10 @@
                 <input type="file" name="Img" class="form-control-file" />
             </div>
             <div class="form-group">
-                <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" id="datepicker" type="text" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")" />
+                <label class="control-labe">Birth Date</label>
+                <input type="date" asp-for="BirthDate" class="form-control" />
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
-            @section Scripts
-            {
-                <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-                <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-                <script>
-                    $(function () {
-                        $("#datepicker").datepicker();
-                    });
-                </script>
-            }
             <div class="form-group">
                 <a class="control-label">Biography</a>
                 <textarea asp-for="Biog" id="markdown" class="form-control markdown-autosize"></textarea>

@@ -1,4 +1,0 @@
-{
-    "appService.preDeployTask": "publish-release",
-    "appService.deploySubpath": "MovieHub/bin/Release/netcoreapp3.1/publish"
-}

@@ -298,8 +298,8 @@ namespace MovieHub.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CreateDate")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Desc")
                         .HasColumnType("TEXT");

@@ -9,7 +9,7 @@ using MovieHub.Data;
 namespace MovieHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201212111358_InitialCreate")]
+    [Migration("20201105101728_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -300,8 +300,8 @@ namespace MovieHub.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CreateDate")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Desc")
                         .HasColumnType("TEXT");

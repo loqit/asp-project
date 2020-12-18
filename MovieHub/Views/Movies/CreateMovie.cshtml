@@ -24,21 +24,10 @@
                 <input type="file" name="Poster" class="form-control-file" />
             </div>
             <div class="form-group">
-                <label asp-for="CreateDate" class="control-label"></label>
-                <input asp-for="CreateDate" id="datepicker" type="text" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")" />
+                <label class="control-labe">Date of Creation</label>
+                <input type="date" asp-format="{0:yyyy-MM-dd}" asp-for="CreateDate" class="form-control" />
                 <span asp-validation-for="CreateDate" class="text-danger"></span>
             </div>
-            @section Scripts
-            {
-                <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-                <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-                <script>
-                    $(function () {
-                        $("#datepicker").datepicker();
-                    });
-                </script>
-            }
             <div class="form-group">
                 <a class="control-label">Description</a>
                 <textarea asp-for="Desc" id="markdown" class="form-control markdown-autosize"></textarea>

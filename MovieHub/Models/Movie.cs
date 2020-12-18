@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +14,7 @@ namespace MovieHub.Models
         public string Title { get; set; }
         [DisplayName("Date of creation")]
         [DataType(DataType.Date)]
-        public DateTime CreateDate { get; set; }
+        public int CreateDate { get; set; }
         
         [DisplayName("Description")]
         public string Desc { get; set; }

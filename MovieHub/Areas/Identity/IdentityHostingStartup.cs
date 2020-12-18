@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -16,10 +15,7 @@ namespace MovieHub.Areas.Identity
             
             builder.ConfigureServices((context, services) => {
                
-                services.AddDefaultIdentity<MHUser>(options =>
-                    {
-                        options.SignIn.RequireConfirmedEmail = true;
-                    }).AddRoles<IdentityRole>()
+                services.AddDefaultIdentity<MHUser>().AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
             });
         }
@@ -28,21 +24,21 @@ namespace MovieHub.Areas.Identity
     {
         public static async Task SeedUsers(UserManager<MHUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            Console.WriteLine("1");
             if (userManager.FindByEmailAsync("admin@test.com").Result==null)
             {
-                var user = new MHUser
+                MHUser user = new MHUser
                 {
                     UserName = "admin@test.com",
                     Email = "admin@test.com"
                 };
-                Console.WriteLine("2");
+
                 var result = userManager.CreateAsync(user, "admin123").Result;
-                //var roleResult = roleManager.CreateAsync(new IdentityRole("Admin")).Result;
+
+
+                var roleResult = roleManager.CreateAsync(new IdentityRole("Admin")).Result;
                 
                 if (result.Succeeded)
                 {
-                    Console.WriteLine("3");
                     await userManager.AddToRoleAsync(user, "Admin");
 
                 }

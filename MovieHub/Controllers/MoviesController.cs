@@ -43,7 +43,7 @@ namespace MovieHub.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateMovie([Bind("Id,Title,Text,Poster, CreateDate")] Movie movie)
+        public async Task<IActionResult> CreateMovie([Bind("Id,Title,Text,Poster")] Movie movie)
         {
             ModelState.Clear();
             TryValidateModel(movie);
@@ -200,24 +200,15 @@ namespace MovieHub.Controllers
                  CategoryId = idCategory, MovieId = idMovie,
                  Category = category, Movie = movie
             };
-
-            var cat = _context.MovieCategories.FirstOrDefault(x=>
-                x.CategoryId == idCategory && x.MovieId == idMovie
-                );
-            if (cat == null)
-            {
-                            Console.WriteLine("contains");
-                            movie.MovieCategories.Add(movieCategory);
-                            _context.Add(movieCategory);
-                            await _context.SaveChangesAsync();
-            }
-            return View("Details", movie);
-            //return RedirectToAction(nameof(Details));
+            movie.MovieCategories.Add(movieCategory);
+            _context.Add(movieCategory);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction(nameof(Index));
         }
         
         public async Task<IActionResult> AddPerson(string personId)
         {
-
             var split = personId.Split(",");
             var idPerson = int.Parse(split[0]);
             var idMovie = int.Parse(split[1]);
@@ -229,18 +220,10 @@ namespace MovieHub.Controllers
                 PersonId = idPerson, MovieId = idMovie,
                 Person = person, Movie = movie
             };
-            var mp = _context.MoviePersons.FirstOrDefault(x=>
-                x.PersonId == idPerson && x.MovieId == idMovie
-            );
-            if (mp == null)
-            {
-                        movie.MoviePersons.Add(moviePerson);
-                        _context.Add(moviePerson);
-                        await _context.SaveChangesAsync();
-            }
-
-            return View("Details", movie);
-            //return RedirectToAction(nameof(Index));
+            movie.MoviePersons.Add(moviePerson);
+            _context.Add(moviePerson);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<string> GetCategory(int categoryId)
@@ -269,21 +252,18 @@ namespace MovieHub.Controllers
         {
             var user = await GetCurrentUser();
             Console.WriteLine(user);
-            if (!ModelState.IsValid) return RedirectToAction(nameof(Details), new {id = idMovie});
-            Console.WriteLine("hell");
-            review.Author = user;
-            Console.WriteLine(review.Author);
-            review.DoC = DateTime.Now;
-            review.FormatedText = Markdig.Markdown.ToHtml(review.Text);
-            _context.Add(review);
-            await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                Console.WriteLine("hell");
+                review.Author = user;
+                Console.WriteLine(review.Author);
+                review.DoC = DateTime.Now;
+                review.FormatedText = Markdig.Markdown.ToHtml(review.Text);
+                _context.Add(review);
+                await _context.SaveChangesAsync();
+                
+            }
             return RedirectToAction(nameof(Details), new {id = idMovie});
         }
-            [Authorize]
-            public async Task<IActionResult> DiscussHub(int id)
-            {
-                var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
-                return View(movie);
-            }
     }
 }
