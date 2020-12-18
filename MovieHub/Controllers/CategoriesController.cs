@@ -52,13 +52,11 @@ namespace MovieHub.Controllers
                         var file = image;
                         var uploads = Path.Combine(_environment.ContentRootPath, "wwwroot", "images", "categories");
 
-                        if (file.Length > 0)
-                        {
-                            await using var fileStream =
-                                new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create);
-                            await file.CopyToAsync(fileStream);
-                            category.Img = file.FileName;
-                        }
+                        if (file.Length <= 0) continue;
+                        await using var fileStream =
+                            new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create);
+                        await file.CopyToAsync(fileStream);
+                        category.Img = file.FileName;
                     }
                 }
                 _context.Add(category);

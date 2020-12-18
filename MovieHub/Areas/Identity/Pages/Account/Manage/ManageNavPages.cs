@@ -18,6 +18,7 @@ namespace MovieHub.Areas.Identity.Pages.Account.Manage
         public static string PersonalData => "PersonalData";
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
+        public static string AddModerator => "AddModerator";
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
@@ -33,6 +34,10 @@ namespace MovieHub.Areas.Identity.Pages.Account.Manage
 
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
     
+        
+        public static string AddModeratorNavClass(ViewContext viewContext) => PageNavClass(viewContext, AddModerator);
+
+        
         public static string PageNavClass(ViewContext viewContext, string page)
         {
             var activePage = viewContext.ViewData["ActivePage"] as string

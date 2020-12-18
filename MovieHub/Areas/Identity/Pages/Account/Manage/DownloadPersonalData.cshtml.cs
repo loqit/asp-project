@@ -35,15 +35,13 @@ namespace MovieHub.Areas.Identity.Pages.Account.Manage
             _logger.LogInformation("User with ID '{UserId}' asked for their personal data.", _userManager.GetUserId(User));
 
             // Only include personal data for download
-            var personalData = new Dictionary<string, string>();
             var personalDataProps = typeof(MHUser).GetProperties().Where(
                             prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
-            foreach (var p in personalDataProps)
-            {
-                personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
-            }
-
+            var personalData = personalDataProps.ToDictionary(p => p.Name, p => p.GetValue(user)?.ToString() ?? "null");
+            
             Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
+            var x = new FileContentResult(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(personalData)), "text/json");
+            
             return new FileContentResult(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(personalData)), "text/json");
         }
     }

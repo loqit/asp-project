@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectResources">
+    <resource url="//fonts.googleapis.com/css?family=Roboto:500" location="$PROJECT_DIR$" />
+    <resource url="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" location="$PROJECT_DIR$" />
+    <resource url="https://fonts.googleapis.com/css?family=VT323" location="$PROJECT_DIR$" />
+  </component>
+</project>
